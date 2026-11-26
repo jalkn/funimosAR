@@ -3,29 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Fondo Solidario WebAR · FUNIMOS & Portex Cargo</title>
-  <!-- Google Fonts: Plus Jakarta Sans & Space Grotesk -->
+  <title>Fondo Solidario WebAR · FUNIMOS &amp; Portex Cargo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <style>
     :root {
-      --bg-deep: #071318;
-      --bg-surface: rgba(11, 28, 35, 0.62);
-      --bg-surface-ar: rgba(7, 19, 24, 0.52);
-      --border-glass: rgba(255, 255, 255, 0.14);
-      --border-glow: rgba(16, 185, 129, 0.45);
-      --emerald: #10B981;
-      --emerald-light: #34D399;
-      --gold: #F59E0B;
-      --gold-light: #FBBF24;
-      --sky: #38BDF8;
+      /* Paleta Oficial Fundación Territorial Funimos (RGB del Manual) */
+      --fn-green: rgb(34, 101, 63);
+      --fn-yellow: rgb(248, 178, 80);
+      --fn-red: rgb(226, 60, 78);
+      --fn-purple: rgb(143, 6, 128);
+      --fn-blue: rgb(33, 80, 114);
+      --fn-slate: rgb(149, 165, 179);
+
+      /* Superficies y contrastes para lectura en WebAR */
+      --bg-deep: #07151f;
+      --bg-surface: rgba(12, 28, 39, 0.72);
+      --bg-surface-ar: rgba(7, 21, 31, 0.58);
+      --border-glass: rgba(255, 255, 255, 0.16);
       --text-main: #F8FAFC;
-      --text-muted: #CBD5E1;
-      --text-dim: #94A3B8;
+      --text-muted: #DCE4EC;
+      --text-dim: rgb(149, 165, 179);
+
+      /* Tipografías del Manual */
+      --font-funimos: "Arial Rounded MT Bold", "Nunito", sans-serif;
+      --font-territorial: "Avenir Next LT Pro Demi", "Plus Jakarta Sans", sans-serif;
       --spring: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
@@ -42,11 +47,10 @@
       overflow: hidden;
       background-color: var(--bg-deep);
       color: var(--text-main);
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: var(--font-territorial);
       user-select: none;
     }
 
-    /* Fullscreen Spatial Layers */
     #topo-canvas, #ar-video {
       position: fixed;
       inset: 0;
@@ -68,10 +72,9 @@
     }
 
     body.ar-active #topo-canvas {
-      opacity: 0.18;
+      opacity: 0.2;
     }
 
-    /* Subtle AR HUD Reticle Overlay */
     .ar-hud-frame {
       position: fixed;
       inset: 14px;
@@ -89,7 +92,7 @@
       position: absolute;
       width: 22px;
       height: 22px;
-      border-color: rgba(52, 211, 153, 0.65);
+      border-color: var(--fn-yellow);
       border-style: solid;
     }
     .hud-tl { top: 0; left: 0; border-width: 2px 0 0 2px; border-top-left-radius: 10px; }
@@ -97,7 +100,6 @@
     .hud-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; border-bottom-left-radius: 10px; }
     .hud-br { bottom: 0; right: 0; border-width: 0 2px 2px 0; border-bottom-right-radius: 10px; }
 
-    /* Main App Layout */
     .app-shell {
       position: relative;
       z-index: 5;
@@ -108,10 +110,10 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+      padding: max(14px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom));
     }
 
-    /* Top Brand & WebAR Toggle Header */
+    /* Header con Isologo FUNIMOS (proporción intacta) */
     .top-bar {
       display: flex;
       align-items: center;
@@ -122,7 +124,7 @@
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--border-glass);
       border-radius: 20px;
-      padding: 10px 14px;
+      padding: 8px 12px;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     }
 
@@ -130,68 +132,68 @@
       background: var(--bg-surface-ar);
     }
 
-    .brand-group {
+    .brand-identity {
       display: flex;
-      flex-direction: column;
-      gap: 2px;
+      align-items: center;
+      gap: 10px;
       min-width: 0;
     }
 
-    .brand-tag {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--emerald-light);
+    .isologo-svg {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .brand-group {
       display: flex;
-      align-items: center;
-      gap: 5px;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
     }
 
-    .pulse-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--emerald);
-      box-shadow: 0 0 8px var(--emerald);
-      animation: pulse 2s infinite;
+    .brand-wordmark {
+      font-family: var(--font-funimos);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      line-height: 1.1;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.4); opacity: 0.6; }
-    }
-
-    .brand-allies {
-      font-size: 12px;
+    .brand-sub {
+      font-family: var(--font-territorial);
+      font-size: 11px;
       font-weight: 600;
-      color: var(--text-main);
+      color: var(--fn-yellow);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .brand-allies span {
-      color: var(--text-dim);
-      font-weight: 400;
+    .brand-ally {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .ar-toggle-btn {
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 9px 13px;
+      gap: 6px;
+      padding: 9px 12px;
       border-radius: 14px;
-      border: 1px solid rgba(16, 185, 129, 0.45);
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(56, 189, 248, 0.18));
+      border: 1px solid rgba(248, 178, 80, 0.45);
+      background: linear-gradient(135deg, rgba(34, 101, 63, 0.7), rgba(33, 80, 114, 0.7));
       color: #ffffff;
-      font-family: inherit;
-      font-size: 12px;
+      font-family: var(--font-territorial);
+      font-size: 11.5px;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.25s var(--spring);
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
     }
 
     .ar-toggle-btn:active {
@@ -199,18 +201,16 @@
     }
 
     body.ar-active .ar-toggle-btn {
-      background: linear-gradient(135deg, #10B981, #059669);
-      border-color: #6EE7B7;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+      background: var(--fn-green);
+      border-color: var(--fn-yellow);
     }
 
-    /* Spatial Navigation Pills */
     .spatial-tabs {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 6px;
-      margin-top: 10px;
-      background: rgba(7, 19, 24, 0.55);
+      margin-top: 8px;
+      background: rgba(7, 21, 31, 0.65);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       padding: 5px;
@@ -222,7 +222,7 @@
       border: none;
       background: transparent;
       color: var(--text-dim);
-      font-family: inherit;
+      font-family: var(--font-territorial);
       font-size: 11.5px;
       font-weight: 700;
       padding: 8px 4px;
@@ -240,19 +240,18 @@
     }
 
     .tab-pill.active {
-      background: rgba(16, 185, 129, 0.22);
+      background: rgba(34, 101, 63, 0.45);
       color: #ffffff;
-      box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.45);
+      box-shadow: inset 0 0 0 1px var(--fn-yellow);
     }
 
-    /* 3D Spatial Stage */
     .spatial-stage {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
       perspective: 1100px;
-      padding: 12px 0;
+      padding: 10px 0;
       min-height: 0;
     }
 
@@ -273,7 +272,7 @@
       -webkit-backdrop-filter: blur(22px);
       border: 1px solid var(--border-glass);
       border-radius: 28px;
-      padding: 22px 20px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -289,7 +288,7 @@
 
     body.ar-active .spatial-card {
       background: var(--bg-surface-ar);
-      border-color: rgba(52, 211, 153, 0.28);
+      border-color: rgba(248, 178, 80, 0.32);
     }
 
     .spatial-card.active {
@@ -298,39 +297,34 @@
       transform: translate3d(0, 0, 0) scale(1);
     }
 
-    /* Parallax Floating Inner Elements */
-    .layer-float-1 {
-      transform: translateZ(18px);
-    }
-    .layer-float-2 {
-      transform: translateZ(30px);
-    }
+    .layer-float-1 { transform: translateZ(18px); }
+    .layer-float-2 { transform: translateZ(30px); }
 
-    /* Card Typography & Badges */
     .card-kicker {
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      font-family: var(--font-territorial);
       font-size: 11px;
-      font-weight: 800;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--emerald-light);
-      background: rgba(16, 185, 129, 0.14);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      letter-spacing: 0.06em;
+      color: var(--fn-yellow);
+      background: rgba(33, 80, 114, 0.55);
+      border: 1px solid rgba(248, 178, 80, 0.35);
       padding: 5px 11px;
       border-radius: 99px;
       width: fit-content;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .card-title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(21px, 5.4vw, 26px);
+      font-family: var(--font-territorial);
+      font-size: clamp(20px, 5.2vw, 25px);
       font-weight: 700;
-      line-height: 1.18;
+      line-height: 1.2;
       color: #ffffff;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .card-body {
@@ -341,16 +335,14 @@
 
     .card-body strong {
       color: #ffffff;
-      font-weight: 700;
     }
 
-    /* Card 1 Specific: Alliance Box */
     .alliance-banner {
       margin-top: 14px;
       padding: 13px 14px;
       border-radius: 18px;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(56, 189, 248, 0.1));
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      background: linear-gradient(135deg, rgba(34, 101, 63, 0.32), rgba(33, 80, 114, 0.38));
+      border: 1px solid rgba(248, 178, 80, 0.3);
       display: flex;
       align-items: flex-start;
       gap: 11px;
@@ -360,8 +352,8 @@
       width: 36px;
       height: 36px;
       border-radius: 12px;
-      background: rgba(56, 189, 248, 0.18);
-      color: var(--sky);
+      background: rgba(248, 178, 80, 0.18);
+      color: var(--fn-yellow);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -382,24 +374,21 @@
       color: var(--text-muted);
     }
 
-    /* Card 2 Specific: Grant Highlight */
     .grant-showcase {
-      background: linear-gradient(145deg, rgba(245, 158, 11, 0.16), rgba(16, 185, 129, 0.12));
-      border: 1px solid rgba(245, 158, 11, 0.38);
+      background: linear-gradient(145deg, rgba(248, 178, 80, 0.18), rgba(34, 101, 63, 0.24));
+      border: 1px solid rgba(248, 178, 80, 0.45);
       border-radius: 22px;
-      padding: 18px 16px;
+      padding: 16px;
       text-align: center;
       margin: 8px 0;
-      position: relative;
-      overflow: hidden;
     }
 
     .grant-pill-count {
       display: inline-block;
-      background: var(--gold);
-      color: #071318;
-      font-size: 11.5px;
-      font-weight: 800;
+      background: var(--fn-yellow);
+      color: #07151f;
+      font-family: var(--font-funimos);
+      font-size: 11px;
       padding: 4px 12px;
       border-radius: 99px;
       text-transform: uppercase;
@@ -408,23 +397,20 @@
     }
 
     .grant-amount {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: var(--font-funimos);
       font-size: clamp(30px, 8vw, 38px);
-      font-weight: 700;
       color: #ffffff;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.01em;
       line-height: 1.1;
-      text-shadow: 0 4px 20px rgba(245, 158, 11, 0.35);
     }
 
     .grant-sub {
       font-size: 13px;
       font-weight: 700;
-      color: var(--gold-light);
+      color: var(--fn-yellow);
       margin-top: 4px;
     }
 
-    /* Card 3 Specific: 6 Thematic Lines Grid */
     .themes-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -434,60 +420,64 @@
 
     .theme-badge {
       background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 15px;
-      padding: 10px 11px;
+      padding: 9px 10px;
       text-align: left;
       color: #ffffff;
-      font-family: inherit;
+      font-family: var(--font-territorial);
       cursor: pointer;
       transition: all 0.25s var(--spring);
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 8px;
     }
 
     .theme-badge i {
-      font-size: 15px;
-      color: var(--emerald-light);
+      font-size: 14px;
       width: 24px;
       height: 24px;
       border-radius: 8px;
-      background: rgba(16, 185, 129, 0.16);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      color: #ffffff;
     }
 
+    .theme-badge:nth-child(1) i { background: var(--fn-green); }
+    .theme-badge:nth-child(2) i { background: var(--fn-blue); }
+    .theme-badge:nth-child(3) i { background: var(--fn-yellow); color: #07151f; }
+    .theme-badge:nth-child(4) i { background: var(--fn-red); }
+    .theme-badge:nth-child(5) i { background: var(--fn-purple); }
+    .theme-badge:nth-child(6) i { background: var(--fn-slate); color: #07151f; }
+
     .theme-badge span {
-      font-size: 12px;
+      font-size: 11.8px;
       font-weight: 700;
       line-height: 1.2;
     }
 
     .theme-badge.selected {
-      background: rgba(16, 185, 129, 0.24);
-      border-color: var(--emerald-light);
+      background: rgba(255, 255, 255, 0.14);
+      border-color: var(--fn-yellow);
       transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(16, 185, 129, 0.22);
     }
 
     .theme-detail-box {
       margin-top: 8px;
-      padding: 11px 13px;
+      padding: 10px 12px;
       border-radius: 14px;
-      background: rgba(7, 19, 24, 0.65);
-      border: 1px solid rgba(52, 211, 153, 0.3);
-      font-size: 12.5px;
+      background: rgba(7, 21, 31, 0.72);
+      border: 1px solid rgba(248, 178, 80, 0.35);
+      font-size: 12.3px;
       line-height: 1.45;
       color: var(--text-main);
-      min-height: 58px;
+      min-height: 54px;
       display: flex;
       align-items: center;
     }
 
-    /* Card 4 Specific: Eligible Entities List */
     .entity-list {
       list-style: none;
       display: flex;
@@ -500,8 +490,8 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       padding: 10px 12px;
       border-radius: 14px;
       font-size: 12.8px;
@@ -510,20 +500,19 @@
     }
 
     .entity-item i {
-      color: var(--emerald-light);
+      color: var(--fn-yellow);
       margin-top: 2px;
       font-size: 13px;
       flex-shrink: 0;
     }
 
-    /* Card Footer Hint & Next Step */
     .card-footer-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-top: 12px;
       padding-top: 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .gyro-hint {
@@ -535,10 +524,10 @@
     }
 
     .next-card-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: #ffffff;
-      font-family: inherit;
+      font-family: var(--font-territorial);
       font-size: 12px;
       font-weight: 700;
       padding: 7px 13px;
@@ -547,14 +536,8 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: background 0.2s;
     }
 
-    .next-card-btn:active {
-      background: rgba(16, 185, 129, 0.3);
-    }
-
-    /* Bottom Floating Action Dock */
     .action-dock {
       display: grid;
       grid-template-columns: 1.45fr 1fr 1fr 0.85fr;
@@ -582,14 +565,14 @@
       align-items: center;
       justify-content: center;
       gap: 4px;
-      font-family: inherit;
+      font-family: var(--font-territorial);
       font-size: 11px;
       font-weight: 700;
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       cursor: pointer;
-      transition: transform 0.2s var(--spring), background 0.2s;
+      transition: transform 0.2s var(--spring);
     }
 
     .dock-btn:active {
@@ -601,19 +584,17 @@
     }
 
     .dock-btn.primary-wa {
-      background: linear-gradient(135deg, #10B981, #059669);
-      border-color: rgba(110, 231, 183, 0.5);
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.32);
+      background: linear-gradient(135deg, var(--fn-green), var(--fn-blue));
+      border-color: rgba(248, 178, 80, 0.45);
     }
 
-    /* Toast Notification (Replaces alert) */
     .toast-banner {
       position: fixed;
-      top: 76px;
+      top: 78px;
       left: 50%;
       transform: translateX(-50%) translateY(-16px);
-      background: rgba(7, 19, 24, 0.92);
-      border: 1px solid var(--border-glow);
+      background: rgba(7, 21, 31, 0.94);
+      border: 1px solid var(--fn-yellow);
       color: #ffffff;
       padding: 10px 16px;
       border-radius: 14px;
@@ -625,7 +606,6 @@
       transition: all 0.3s var(--spring);
       max-width: 90%;
       text-align: center;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
     }
 
     .toast-banner.show {
@@ -633,13 +613,11 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* QR Share Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(3, 10, 14, 0.78);
+      background: rgba(4, 13, 20, 0.8);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       z-index: 60;
       display: flex;
       align-items: center;
@@ -658,18 +636,12 @@
     .qr-modal {
       width: 100%;
       max-width: 340px;
-      background: #0b1c23;
-      border: 1px solid rgba(52, 211, 153, 0.35);
+      background: #0c1c27;
+      border: 1px solid rgba(248, 178, 80, 0.4);
       border-radius: 26px;
-      padding: 24px 20px;
+      padding: 22px 20px;
       text-align: center;
       box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
-      transform: scale(0.92);
-      transition: transform 0.35s var(--spring);
-    }
-
-    .modal-backdrop.open .qr-modal {
-      transform: scale(1);
     }
 
     .qr-frame {
@@ -678,14 +650,13 @@
       border-radius: 20px;
       width: 210px;
       height: 210px;
-      margin: 16px auto;
+      margin: 14px auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
 
-    .qr-frame img, .qr-frame canvas {
+    .qr-frame img {
       width: 100%;
       height: 100%;
       display: block;
@@ -695,7 +666,7 @@
     .modal-actions {
       display: flex;
       gap: 10px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
 
     .modal-btn {
@@ -705,28 +676,24 @@
       border: 1px solid rgba(255, 255, 255, 0.16);
       background: rgba(255, 255, 255, 0.08);
       color: #ffffff;
-      font-family: inherit;
+      font-family: var(--font-territorial);
       font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
     }
 
     .modal-btn.accent {
-      background: var(--emerald);
-      border-color: var(--emerald-light);
-      color: #04120e;
+      background: var(--fn-green);
+      border-color: var(--fn-yellow);
+      color: #ffffff;
     }
   </style>
 </head>
 <body>
 
-  <!-- Procedural Organic Topographic / Territorial Canvas Fallback -->
   <canvas id="topo-canvas"></canvas>
-
-  <!-- Live Rear Camera Feed for WebAR Mode -->
   <video id="ar-video" autoplay playsinline muted></video>
 
-  <!-- Subtle AR Viewfinder Corners -->
   <div class="ar-hud-frame" aria-hidden="true">
     <div class="hud-corner hud-tl"></div>
     <div class="hud-corner hud-tr"></div>
@@ -734,30 +701,49 @@
     <div class="hud-corner hud-br"></div>
   </div>
 
-  <!-- Non-blocking Toast Message -->
   <div id="toast" class="toast-banner" role="status"></div>
 
-  <!-- Main Mobile-First Spatial Interface -->
   <main class="app-shell">
-    <!-- Top Header -->
     <header>
       <div class="top-bar">
-        <div class="brand-group">
-          <div class="brand-tag">
-            <span class="pulse-dot"></span>
-            Juntos Tejemos Territorio
-          </div>
-          <div class="brand-allies">
-            FUNIMOS <span>· Fundación Territorial &amp;</span> Portex Cargo
+        <div class="brand-identity">
+          <!-- Isologo FUNIMOS: Arco desvanecido + Comunidad activa -->
+          <svg class="isologo-svg" viewBox="0 0 100 100" role="img" aria-label="Isologo FUNIMOS Fundación Territorial">
+            <defs>
+              <linearGradient id="arcoFade" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="rgb(149, 165, 179)" stop-opacity="0.95" />
+                <stop offset="75%" stop-color="rgb(149, 165, 179)" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="rgb(149, 165, 179)" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M 14 78 A 38 38 0 1 1 86 78" fill="none" stroke="url(#arcoFade)" stroke-width="6" stroke-linecap="round" />
+            <!-- Figura superior (Rojo) -->
+            <circle cx="50" cy="24" r="5.5" fill="rgb(226, 60, 78)" />
+            <path d="M 39 33 Q 50 38 61 33 L 55 46 L 45 46 Z" fill="rgb(226, 60, 78)" />
+            <!-- Figura derecha (Amarillo) -->
+            <circle cx="69" cy="44" r="5" fill="rgb(248, 178, 80)" />
+            <path d="M 62 51 L 75 51 L 72 64 L 64 62 Z" fill="rgb(248, 178, 80)" />
+            <!-- Figura inferior (Púrpura) -->
+            <circle cx="50" cy="63" r="5.5" fill="rgb(143, 6, 128)" />
+            <path d="M 40 70 L 60 70 L 55 82 L 45 82 Z" fill="rgb(143, 6, 128)" />
+            <!-- Figura izquierda (Verde) -->
+            <circle cx="31" cy="44" r="5" fill="rgb(34, 101, 63)" />
+            <path d="M 25 51 L 38 51 L 36 62 L 28 64 Z" fill="rgb(34, 101, 63)" />
+          </svg>
+
+          <div class="brand-group">
+            <div class="brand-wordmark">FUNIMOS</div>
+            <div class="brand-sub">Fundación Territorial</div>
+            <div class="brand-ally">Alianza con Portex Cargo</div>
           </div>
         </div>
+
         <button id="ar-toggle" class="ar-toggle-btn" type="button" aria-pressed="false">
           <i class="fa-solid fa-vr-cardboard"></i>
-          <span id="ar-btn-label">Activar Cámara AR</span>
+          <span id="ar-btn-label">Cámara AR</span>
         </button>
       </div>
 
-      <!-- Spatial Navigation Tabs -->
       <nav class="spatial-tabs" aria-label="Secciones de la convocatoria">
         <button class="tab-pill active" data-index="0" type="button">
           <i class="fa-solid fa-bridge-water"></i>
@@ -778,14 +764,13 @@
       </nav>
     </header>
 
-    <!-- 3D Parallax Spatial Card Stage -->
     <section class="spatial-stage" id="spatial-stage">
       <div class="spatial-card-wrapper" id="card-wrapper">
 
-        <!-- CARD 1: EL FONDO -->
+        <!-- CARD 1 -->
         <article class="spatial-card active" data-card="0">
           <div class="layer-float-1">
-            <span class="card-kicker"><i class="fa-solid fa-compass"></i> Convocatoria Territorial</span>
+            <span class="card-kicker"><i class="fa-solid fa-compass"></i> Juntos Tejemos Territorio</span>
             <h1 class="card-title">Fondo Solidario para el Fortalecimiento y Desarrollo Territorial</h1>
             <p class="card-body">
               Este fondo nace para crear <strong>puentes de confianza</strong> y potenciar iniciativas innovadoras y de impactos significativos que fortalezcan el territorio, impulsando la filantropía comunitaria y la cultura solidaria.
@@ -797,23 +782,21 @@
               </div>
               <div class="alliance-text">
                 <h4>Alianza FUNIMOS &amp; Portex Cargo</h4>
-                <p>Portex Cargo se suma como aliado estratégico que va más allá de su labor empresarial, apoyando iniciativas que fortalecen el tejido social y abren oportunidades.</p>
+                <p>Portex Cargo se suma como aliado estratégico más allá de su labor empresarial, apoyando iniciativas que fortalecen el tejido social y abren oportunidades.</p>
               </div>
             </div>
           </div>
 
           <div class="card-footer-row">
-            <span class="gyro-hint"><i class="fa-solid fa-mobile-screen-button"></i> Mueve tu dispositivo para efecto 3D</span>
+            <span class="gyro-hint"><i class="fa-solid fa-mobile-screen-button"></i> Mueve tu dispositivo para 3D</span>
             <button class="next-card-btn" data-next="1" type="button">Ver Estímulo <i class="fa-solid fa-arrow-right"></i></button>
           </div>
         </article>
 
-        <!-- CARD 2: ESTÍMULO ECONÓMICO -->
+        <!-- CARD 2 -->
         <article class="spatial-card" data-card="1">
           <div class="layer-float-1">
-            <span class="card-kicker" style="color: var(--gold-light); border-color: rgba(245,158,11,0.4); background: rgba(245,158,11,0.14);">
-              <i class="fa-solid fa-coins"></i> Apoyo Directo
-            </span>
+            <span class="card-kicker"><i class="fa-solid fa-coins"></i> Apoyo Directo</span>
             <h2 class="card-title">Impulso Económico para Iniciativas Sociales</h2>
 
             <div class="grant-showcase layer-float-2">
@@ -823,7 +806,7 @@
             </div>
 
             <p class="card-body" style="margin-top: 10px;">
-              Desde esta alianza entre <strong>Portex Cargo y Funimos</strong>, invitamos a las organizaciones a aprovechar esta oportunidad para fortalecer sus capacidades organizativas y construir un desarrollo local más justo, solidario y sostenible.
+              Desde esta alianza entre <strong>Portex Cargo y Funimos</strong>, invitamos a las organizaciones a presentar sus iniciativas para construir un desarrollo local más justo, solidario y sostenible.
             </p>
           </div>
 
@@ -833,23 +816,23 @@
           </div>
         </article>
 
-        <!-- CARD 3: 6 LÍNEAS TEMÁTICAS -->
+        <!-- CARD 3 -->
         <article class="spatial-card" data-card="2">
           <div class="layer-float-1">
             <span class="card-kicker"><i class="fa-solid fa-layer-group"></i> Áreas de Impacto</span>
             <h2 class="card-title" style="margin-bottom: 8px;">6 Líneas Temáticas</h2>
-            <p class="card-body" style="font-size: 12.5px; margin-bottom: 8px;">Toca cada insignia espacial para explorar el enfoque territorial:</p>
+            <p class="card-body" style="font-size: 12.5px; margin-bottom: 8px;">Toca cada línea para conocer su enfoque:</p>
 
             <div class="themes-grid layer-float-2" id="themes-grid">
               <button class="theme-badge selected" type="button" data-desc="Soberanía Alimentaria: Iniciativas de producción agroecológica, seguridad nutricional y abastecimiento comunitario sostenible.">
                 <i class="fa-solid fa-wheat-awn"></i>
                 <span>Soberanía Alimentaria</span>
               </button>
-              <button class="theme-badge" type="button" data-desc="Medioambiente: Proyectos de conservación, restauración ecológica, economía circular y defensa de los ecosistemas locales.">
+              <button class="theme-badge" type="button" data-desc="Medioambiente: Proyectos de conservación, restauración ecológica, economía circular y cuidado de los ecosistemas.">
                 <i class="fa-solid fa-leaf"></i>
                 <span>Medioambiente</span>
               </button>
-              <button class="theme-badge" type="button" data-desc="Turismo: Experiencias de turismo comunitario, biocultural y sostenible con sentido de pertenencia territorial.">
+              <button class="theme-badge" type="button" data-desc="Turismo: Experiencias de turismo comunitario, biocultural y sostenible con sentido territorial.">
                 <i class="fa-solid fa-route"></i>
                 <span>Turismo</span>
               </button>
@@ -878,12 +861,10 @@
           </div>
         </article>
 
-        <!-- CARD 4: ¿QUIÉNES PARTICIPAN? -->
+        <!-- CARD 4 -->
         <article class="spatial-card" data-card="3">
           <div class="layer-float-1">
-            <span class="card-kicker" style="color: var(--sky); border-color: rgba(56,189,248,0.35); background: rgba(56,189,248,0.14);">
-              <i class="fa-solid fa-id-card-clip"></i> Elegibilidad
-            </span>
+            <span class="card-kicker"><i class="fa-solid fa-id-card-clip"></i> Elegibilidad</span>
             <h2 class="card-title">¿Quiénes Pueden Participar?</h2>
 
             <ul class="entity-list layer-float-2">
@@ -911,7 +892,6 @@
       </div>
     </section>
 
-    <!-- Floating Action Dock -->
     <footer class="action-dock" aria-label="Canales de contacto y compartir">
       <a class="dock-btn primary-wa" href="https://wa.me/573054711870?text=Hola%20FUNIMOS%2C%20quisiera%20informaci%C3%B3n%20sobre%20el%20Fondo%20Solidario%20para%20el%20Fortalecimiento%20y%20Desarrollo%20Territorial." target="_blank" rel="noopener noreferrer">
         <i class="fa-brands fa-whatsapp"></i>
@@ -932,18 +912,17 @@
     </footer>
   </main>
 
-  <!-- Built-in QR Code Share Modal -->
   <div class="modal-backdrop" id="qr-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="qr-modal-title">
     <div class="qr-modal">
       <span class="card-kicker" style="margin: 0 auto 8px;"><i class="fa-solid fa-share-nodes"></i> Comparte la Experiencia</span>
-      <h3 id="qr-modal-title" style="font-family: 'Space Grotesk', sans-serif; font-size: 19px; color: #fff;">Escanea para Abrir</h3>
-      <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Fondo Solidario FUNIMOS &amp; Portex Cargo</p>
+      <h3 id="qr-modal-title" style="font-family: var(--font-territorial); font-size: 19px; color: #fff;">Escanea para Abrir</h3>
+      <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">FUNIMOS · Fundación Territorial &amp; Portex Cargo</p>
 
       <div class="qr-frame">
-        <img id="qr-image" alt="Código QR Convocatoria FUNIMOS" src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=071318&bgcolor=ffffff&data=https%3A%2F%2Fwww.funimos.com" />
+        <img id="qr-image" alt="Código QR Convocatoria FUNIMOS" src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=07151f&bgcolor=ffffff&data=https%3A%2F%2Fwww.funimos.com" />
       </div>
 
-      <p style="font-size: 11.5px; color: var(--emerald-light); font-weight: 600;">www.funimos.com · +57 305 471 1870</p>
+      <p style="font-size: 11.5px; color: var(--fn-yellow); font-weight: 700;">www.funimos.com · +57 305 471 1870</p>
 
       <div class="modal-actions">
         <button class="modal-btn" id="copy-link-btn" type="button"><i class="fa-regular fa-copy"></i> Copiar Enlace</button>
@@ -954,9 +933,6 @@
 
   <script>
     (function () {
-      /* -----------------------------------------------------------
-         1. PROCEDURAL ORGANIC TOPOGRAPHIC / TERRITORIAL CANVAS
-      ----------------------------------------------------------- */
       const canvas = document.getElementById('topo-canvas');
       const ctx = canvas.getContext('2d');
       let width = 0, height = 0, time = 0;
@@ -973,7 +949,6 @@
       window.addEventListener('resize', resizeCanvas);
       resizeCanvas();
 
-      // Smooth pseudo-organic wave height function for contour lines
       function field(x, y, t) {
         return (
           Math.sin(x * 0.0045 + t * 0.35) * Math.cos(y * 0.0045 - t * 0.25) +
@@ -984,19 +959,16 @@
 
       function drawTopography() {
         time += 0.012;
-
-        // Deep forest-slate radial ambient gradient
         const grad = ctx.createRadialGradient(
           width * 0.5, height * 0.35, 20,
           width * 0.5, height * 0.5, Math.max(width, height) * 0.85
         );
-        grad.addColorStop(0, '#0d262e');
-        grad.addColorStop(0.55, '#071318');
-        grad.addColorStop(1, '#040b0e');
+        grad.addColorStop(0, 'rgb(33, 80, 114)');
+        grad.addColorStop(0.6, '#07151f');
+        grad.addColorStop(1, '#040b10');
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, width, height);
 
-        // Draw flowing territorial contour curves
         const levels = [-1.1, -0.75, -0.4, -0.05, 0.3, 0.65, 1.0];
         const step = 26;
 
@@ -1005,10 +977,10 @@
           ctx.lineWidth = idx % 3 === 0 ? 1.4 : 0.8;
           ctx.strokeStyle =
             idx % 3 === 0
-              ? 'rgba(16, 185, 129, 0.24)'
+              ? 'rgba(34, 101, 63, 0.42)'
               : idx % 2 === 0
-              ? 'rgba(56, 189, 248, 0.14)'
-              : 'rgba(245, 158, 11, 0.10)';
+              ? 'rgba(248, 178, 80, 0.2)'
+              : 'rgba(149, 165, 179, 0.16)';
 
           for (let y = 0; y <= height + step; y += step) {
             let started = false;
@@ -1030,12 +1002,8 @@
 
         requestAnimationFrame(drawTopography);
       }
-
       requestAnimationFrame(drawTopography);
 
-      /* -----------------------------------------------------------
-         2. TOAST HELPER (NON-BLOCKING UI FEEDBACK)
-      ----------------------------------------------------------- */
       const toastEl = document.getElementById('toast');
       let toastTimer = null;
 
@@ -1046,9 +1014,6 @@
         toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
       }
 
-      /* -----------------------------------------------------------
-         3. CAMERA-BACKED WEBAR MODE + IOS GYRO PERMISSION
-      ----------------------------------------------------------- */
       const arToggleBtn = document.getElementById('ar-toggle');
       const arBtnLabel = document.getElementById('ar-btn-label');
       const arVideo = document.getElementById('ar-video');
@@ -1065,9 +1030,7 @@
             if (state === 'granted') {
               window.addEventListener('deviceorientation', handleDeviceOrientation);
             }
-          } catch (_) {
-            // User declined or unsupported; touch/mouse parallax remains active
-          }
+          } catch (_) {}
         }
       }
 
@@ -1083,13 +1046,13 @@
           arActive = false;
           document.body.classList.remove('ar-active');
           arToggleBtn.setAttribute('aria-pressed', 'false');
-          arBtnLabel.textContent = 'Activar Cámara AR';
-          showToast('Modo Territorial 3D activado');
+          arBtnLabel.textContent = 'Cámara AR';
+          showToast('Entorno territorial 3D activado');
           return;
         }
 
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          showToast('Cámara no disponible en este navegador. Usando fondo territorial 3D.');
+          showToast('Cámara no disponible. Usando entorno territorial 3D.');
           return;
         }
 
@@ -1106,22 +1069,18 @@
           arBtnLabel.textContent = 'AR Activo';
           showToast('Cámara AR activada · Apunta a tu entorno');
         } catch (err) {
-          showToast('Permiso de cámara denegado o no disponible. Usando entorno 3D.');
+          showToast('Permiso de cámara no concedido. Usando entorno 3D.');
         }
       }
 
       arToggleBtn.addEventListener('click', toggleARMode);
 
-      /* -----------------------------------------------------------
-         4. 3D GYROSCOPE & POINTER/TOUCH PARALLAX
-      ----------------------------------------------------------- */
       const cardWrapper = document.getElementById('card-wrapper');
       let targetRotX = 0, targetRotY = 0;
       let currentRotX = 0, currentRotY = 0;
 
       function handleDeviceOrientation(e) {
         if (e.beta === null || e.gamma === null) return;
-        // Neutral holding angle around beta ~45deg
         const clampedBeta = Math.max(-35, Math.min(35, e.beta - 45));
         const clampedGamma = Math.max(-35, Math.min(35, e.gamma));
         targetRotX = (-clampedBeta / 35) * 10;
@@ -1162,9 +1121,6 @@
       }
       requestAnimationFrame(animateParallax);
 
-      /* -----------------------------------------------------------
-         5. SPATIAL CARD CAROUSEL & INTERACTIVE THEMES
-      ----------------------------------------------------------- */
       const tabs = document.querySelectorAll('.tab-pill');
       const cards = document.querySelectorAll('.spatial-card');
       const nextBtns = document.querySelectorAll('.next-card-btn');
@@ -1189,7 +1145,6 @@
         });
       });
 
-      // Swipe support on spatial stage
       let touchStartX = 0;
       const stage = document.getElementById('spatial-stage');
       stage.addEventListener('touchstart', (e) => {
@@ -1204,7 +1159,6 @@
         }
       }, { passive: true });
 
-      // Expandable / Tappable 6 Thematic Badges
       const themeBadges = document.querySelectorAll('.theme-badge');
       const themeDetail = document.getElementById('theme-detail');
 
@@ -1216,21 +1170,17 @@
         });
       });
 
-      /* -----------------------------------------------------------
-         6. BUILT-IN QR SHARE MODAL & CLIPBOARD COPY
-      ----------------------------------------------------------- */
       const qrBackdrop = document.getElementById('qr-modal-backdrop');
       const openQrBtn = document.getElementById('open-qr-btn');
       const closeQrBtn = document.getElementById('close-qr-btn');
       const copyLinkBtn = document.getElementById('copy-link-btn');
       const qrImage = document.getElementById('qr-image');
 
-      // Use current URL if hosted on http/https, otherwise default to www.funimos.com
       const shareUrl = window.location.protocol.startsWith('http')
         ? window.location.href
         : 'https://www.funimos.com';
 
-      qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=071318&bgcolor=ffffff&data=${encodeURIComponent(shareUrl)}`;
+      qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&color=07151f&bgcolor=ffffff&data=${encodeURIComponent(shareUrl)}`;
 
       openQrBtn.addEventListener('click', () => qrBackdrop.classList.add('open'));
       closeQrBtn.addEventListener('click', () => qrBackdrop.classList.remove('open'));
